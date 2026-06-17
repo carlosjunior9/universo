@@ -61,9 +61,9 @@ function startUniverse() {
     }
 
     reset() {
-      this.x = (Math.random() - 0.5) * canvas.width
+      this.x = (Math.random() - 0.2) * canvas.width
 
-      this.y = (Math.random() - 0.5) * canvas.height
+      this.y = (Math.random() - 0.2) * canvas.height
 
       this.z = Math.random() * canvas.width
     }
@@ -156,19 +156,27 @@ function startHeartScene(canvas, ctx) {
 
     offCtx.fillStyle = 'white'
 
+    const isMobile = window.innerWidth < 768
+
     if (current === 0) {
-      offCtx.font = 'bold 300px Arial'
+      offCtx.font = isMobile ? 'bold 180px Arial' : 'bold 300px Arial'
     } else if (current === 1) {
-      offCtx.font = 'bold 90px Arial'
+      offCtx.font = isMobile ? 'bold 45px Arial' : 'bold 90px Arial'
     } else {
-      offCtx.font = 'bold 55px Arial'
+      offCtx.font = isMobile ? 'bold 22px Arial' : 'bold 55px Arial'
     }
 
     offCtx.textAlign = 'center'
 
     offCtx.textBaseline = 'middle'
 
-    offCtx.fillText(messages[current], offCanvas.width / 2, offCanvas.height / 2)
+    if (current === 2) {
+      offCtx.fillText('ESTOY MUY ORGULLOSO', offCanvas.width / 2, offCanvas.height / 2 - 35)
+
+      offCtx.fillText('DE TI MI NIÑA', offCanvas.width / 2, offCanvas.height / 2 + 35)
+    } else {
+      offCtx.fillText(messages[current], offCanvas.width / 2, offCanvas.height / 2)
+    }
 
     const imgData = offCtx.getImageData(0, 0, offCanvas.width, offCanvas.height)
 
