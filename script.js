@@ -200,7 +200,7 @@ function startHeartScene(canvas, ctx) {
 
     let particles = []
 
-    const density = window.innerWidth < 768 ? 2 : 3
+    const density = window.innerWidth < 768 ? 1 : 2
 
     for (let y = 0; y < imgData.height; y += density) {
       for (let x = 0; x < imgData.width; x += density) {
