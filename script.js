@@ -61,9 +61,9 @@ function startUniverse() {
     }
 
     reset() {
-      this.x = (Math.random() - 0.2) * canvas.width
+      this.x = (Math.random() - 0.8) * canvas.width
 
-      this.y = (Math.random() - 0.2) * canvas.height
+      this.y = (Math.random() - 0.8) * canvas.height
 
       this.z = Math.random() * canvas.width
     }
@@ -159,45 +159,65 @@ function startHeartScene(canvas, ctx) {
     const isMobile = window.innerWidth < 768
 
     if (current === 0) {
-      offCtx.font = isMobile ? 'bold 180px Arial' : 'bold 300px Arial'
+      offCtx.font = isMobile ? 'bold 150px Arial' : 'bold 300px Arial'
     } else if (current === 1) {
-      offCtx.font = isMobile ? 'bold 45px Arial' : 'bold 90px Arial'
+      offCtx.font = isMobile ? `bold ${Math.floor(canvas.width * 0.09)}px Arial` : 'bold 90px Arial'
     } else {
-      offCtx.font = isMobile ? 'bold 22px Arial' : 'bold 55px Arial'
+      offCtx.font = isMobile ? `bold ${Math.floor(canvas.width * 0.06)}px Arial` : 'bold 55px Arial'
     }
 
     offCtx.textAlign = 'center'
 
     offCtx.textBaseline = 'middle'
 
-    if (current === 2) {
-      offCtx.fillText('ESTOY MUY ORGULLOSO', offCanvas.width / 2, offCanvas.height / 2 - 35)
+    if (current === 0) {
+      offCtx.fillText('❤', offCanvas.width / 2, offCanvas.height / 2)
+    } else if (current === 1) {
+      if (isMobile) {
+        offCtx.fillText('TE AMO', offCanvas.width / 2, offCanvas.height / 2 - 30)
 
-      offCtx.fillText('DE TI MI NIÑA', offCanvas.width / 2, offCanvas.height / 2 + 35)
+        offCtx.fillText('MUCHISIMO', offCanvas.width / 2, offCanvas.height / 2 + 30)
+      } else {
+        offCtx.fillText('TE AMO MUCHISIMO', offCanvas.width / 2, offCanvas.height / 2)
+      }
     } else {
-      offCtx.fillText(messages[current], offCanvas.width / 2, offCanvas.height / 2)
+      if (isMobile) {
+        offCtx.fillText('ESTOY', offCanvas.width / 2, offCanvas.height / 2 - 90)
+
+        offCtx.fillText('MUY ORGULLOSO', offCanvas.width / 2, offCanvas.height / 2 - 20)
+
+        offCtx.fillText('DE TI', offCanvas.width / 2, offCanvas.height / 2 + 50)
+
+        offCtx.fillText('MI NIÑA', offCanvas.width / 2, offCanvas.height / 2 + 120)
+      } else {
+        offCtx.fillText('ESTOY MUY ORGULLOSO', offCanvas.width / 2, offCanvas.height / 2 - 35)
+
+        offCtx.fillText('DE TI MI NIÑA', offCanvas.width / 2, offCanvas.height / 2 + 35)
+      }
     }
 
     const imgData = offCtx.getImageData(0, 0, offCanvas.width, offCanvas.height)
 
     let particles = []
 
-    for (let y = 0; y < imgData.height; y += 6) {
-      for (let x = 0; x < imgData.width; x += 6) {
+    const density = window.innerWidth < 768 ? 4 : 5
+
+    for (let y = 0; y < imgData.height; y += density) {
+      for (let x = 0; x < imgData.width; x += density) {
         const index = (y * imgData.width + x) * 4
 
         if (imgData.data[index + 3] > 128) {
           particles.push({
             x: Math.random() * canvas.width,
-
             y: Math.random() * canvas.height,
-
             tx: x,
             ty: y
           })
         }
       }
     }
+
+    console.log('Partículas:', particles.length)
 
     let frame = 0
 
@@ -239,128 +259,98 @@ function startHeartScene(canvas, ctx) {
       }
     }, 8000)
   }
-}
 
-function returnToLamp() {
-  const canvas = document.getElementById('universe')
+  function returnToLamp() {
+    const canvas = document.getElementById('universe')
 
-  const ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext('2d')
 
-  let stars = []
+    let stars = []
 
-  for (let i = 0; i < 1200; i++) {
-    stars.push({
-      x: Math.random() * canvas.width,
+    for (let i = 0; i < 1200; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
 
-      y: Math.random() * canvas.height,
+        y: Math.random() * canvas.height,
 
-      size: Math.random() * 2
-    })
-  }
-
-  let frame = 0
-
-  function animate() {
-    ctx.fillStyle = 'rgba(0,0,0,0.15)'
-
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-    stars.forEach((star) => {
-      star.x += (canvas.width / 2 - star.x) * 0.002
-
-      star.y += (canvas.height / 2 - star.y) * 0.002
-
-      ctx.beginPath()
-
-      ctx.fillStyle = 'white'
-
-      ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2)
-
-      ctx.fill()
-    })
-
-    frame++
-
-    if (frame < 500) {
-      requestAnimationFrame(animate)
-    } else {
-      fadeToLamp()
+        size: Math.random() * 2
+      })
     }
-  }
 
-  animate()
-}
+    let frame = 0
 
-function fadeToLamp() {
-  const canvas = document.getElementById('universe')
+    function animate() {
+      ctx.fillStyle = 'rgba(0,0,0,0.15)'
 
-  const ctx = canvas.getContext('2d')
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-  let opacity = 0
+      stars.forEach((star) => {
+        star.x += (canvas.width / 2 - star.x) * 0.002
 
-  function fade() {
-    ctx.fillStyle = `rgba(0,0,0,${opacity})`
+        star.y += (canvas.height / 2 - star.y) * 0.002
 
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
+        ctx.beginPath()
 
-    opacity += 0.01
+        ctx.fillStyle = 'white'
 
-    if (opacity < 1) {
-      requestAnimationFrame(fade)
-    } else {
-      finishExperience()
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2)
+
+        ctx.fill()
+      })
+
+      frame++
+
+      if (frame < 500) {
+        requestAnimationFrame(animate)
+      } else {
+        fadeToLamp()
+      }
     }
+
+    animate()
   }
 
-  fade()
-}
+  function fadeToLamp() {
+    const canvas = document.getElementById('universe')
 
-function reverse() {
-  ctx.fillStyle = 'black'
+    const ctx = canvas.getContext('2d')
 
-  ctx.fillRect(0, 0, canvas.width, canvas.height)
+    let opacity = 0
 
-  stars.forEach((star) => {
-    star.x -= (star.x - canvas.width / 2) * 0.02
+    function fade() {
+      ctx.fillStyle = `rgba(0,0,0,${opacity})`
 
-    star.y -= (star.y - canvas.height / 2) * 0.02
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-    ctx.beginPath()
+      opacity += 0.01
 
-    ctx.fillStyle = 'white'
+      if (opacity < 1) {
+        requestAnimationFrame(fade)
+      } else {
+        finishExperience()
+      }
+    }
 
-    ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2)
-
-    ctx.fill()
-  })
-
-  speed--
-
-  if (speed > 0) {
-    requestAnimationFrame(reverse)
-  } else {
-    finishExperience()
+    fade()
   }
-}
 
-reverse()
+  function finishExperience() {
+    document.getElementById('universe').style.display = 'none'
 
-function finishExperience() {
-  document.getElementById('universe').style.display = 'none'
+    document.getElementById('scene').style.display = 'flex'
 
-  document.getElementById('scene').style.display = 'flex'
+    const glow = document.getElementById('glow')
 
-  const glow = document.getElementById('glow')
+    glow.classList.remove('light-on')
 
-  glow.classList.remove('light-on')
+    const music = document.getElementById('music')
 
-  const music = document.getElementById('music')
+    music.pause()
 
-  music.pause()
+    music.currentTime = 0
 
-  music.currentTime = 0
+    started = false
 
-  started = false
-
-  document.getElementById('instruction').innerHTML = 'Toca la cadena ❤️'
+    document.getElementById('instruction').innerHTML = 'Toca la cadena ❤️'
+  }
 }
